@@ -18,14 +18,14 @@ It works well with VirtualGL. I have ran Blender as well as even Path of Exile o
 All in a Docker container. Checkout my Dockerfiles for these (If I didn't get around to putting them up. Just ask.)
 
 # Tested
-Macbook Retina with Mesa drivers.
+* Macbook Retina with Mesa drivers.
 
-Nvidia 349.xx OK  (Current Beta Drivers)
+* Nvidia 349.xx OK  (Current Beta Drivers)
 ![](http://yantis-scripts.s3.amazonaws.com/screenshot_20150412-070107.jpg)
 
-Nvidia 346.xx OK  (Current Generation Drivers) (This one is an Amazon EC2 GPU instance)
+* Nvidia 346.xx OK  (Current Generation Drivers) (This one is an Amazon EC2 GPU instance)
 ![](http://yantis-scripts.s3.amazonaws.com/screenshot_20150412-071934.jpg)
 
-Nvidia 340.xx OK (Previous Generation Drivers)
+* Nvidia 340.xx OK (Previous Generation Drivers)
 ![](http://yantis-scripts.s3.amazonaws.com/screenshot_20150412-071443.jpg)
 
