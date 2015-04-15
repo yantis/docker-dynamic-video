@@ -65,7 +65,7 @@ This follows these docker conventions:
 * `-e DISPLAY` sets the host display to the local machines display.
 * `-v /tmp/.X11-unix:/tmp/.X11-unix:ro` bind mounts the X11 socks on your local machine to the containers and makes it read only.
 * `-u docker` sets the user to docker. (or you could do root as well)
-* `yantis/dynamic-video /bin/bash -c "sudo initalize-graphics >/dev/null 2>/dev/null; nvidia-smi;" 
+* `yantis/dynamic-video /bin/bash -c "sudo initalize-graphics >/dev/null 2>/dev/null; nvidia-smi;"`
 you need to initalize the graphics or otherwise it won't adapt to your graphics drivers and may not work.
 
 
