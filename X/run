@@ -5,64 +5,7 @@
 # Released under the MIT license
 ############################################################
 
-# Is the host using Nvidia drivers?
-if [ -f /proc/driver/nvidia/version ];
-then
-
-  # If it is my unique version (modified to make sure only I have it)
-  # Then just start X so it doesn't take over my screens.
-  CHECKSUM=$(md5sum /proc/driver/nvidia/version | cut -b1-32)
-  if [[ $CHECKSUM = "d2a02e1560be195870db33679a77d3e5" ]]
-  then
-    echo "X Server Disabled"
-    exit 0
-  fi
-
-  # Might be cleaner to remove the mesa libraries once
-  # But doing it this way allows the user to still use mesa
-  # If all else fails.
-
-  # Get the string that has the version info from the host
-  NVIDIA=$(cat /proc/driver/nvidia/version | grep NVRM)
-
-  # Is this the 304 series?
-  if [[ $NVIDIA == *" 304."* ]]
-  then
-    cd /root/nvidia/304/
-    pacman --noconfirm -Rdd mesa-libgl lib32-mesa-libgl
-    pacman -U --noconfirm *.xz
-  fi
-
-  # Is this the 340 series?
-  if [[ $NVIDIA == *" 340."* ]]
-  then
-    cd /root/nvidia/340/
-    pacman --noconfirm -Rdd mesa-libgl lib32-mesa-libgl
-    pacman -U --noconfirm *.xz
-  fi
-
-  # Is this the 346 series?
-  if [[ $NVIDIA == *" 346."* ]]
-  then
-    cd /root/nvidia/346/
-    pacman --noconfirm -Rdd mesa-libgl lib32-mesa-libgl
-    pacman -U --noconfirm *.xz
-  fi
-
-  # Is it version 349 (BETA) ?
-  if [[ $NVIDIA == *" 349."* ]]
-  then
-    cd /root/nvidia/349/
-    pacman --noconfirm -Rdd mesa-libgl lib32-mesa-libgl
-    pacman -U --noconfirm *.xz
-  fi
-
-  # Configure for headless operation for all GPUs on the system.
-  /usr/bin/nvidia-xconfig --query-gpu-info | \
-          grep BusID | \
-          cut -d \  -f6 | \
-          xargs -I{} nvidia-xconfig --use-display-device=none --busid={}
-fi
+/usr/bin/initalize-graphics
 
 # Launch the X server
 /usr/bin/X
