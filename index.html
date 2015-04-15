@@ -20,12 +20,14 @@
 
     <section class="main-content">
       <h1>
-<a id="docker-dynamic-nvidia" class="anchor" href="#docker-dynamic-nvidia" aria-hidden="true"><span class="octicon octicon-link"></span></a>docker-dynamic-nvidia</h1>
+<a id="docker-dynamic-video" class="anchor" href="#docker-dynamic-video" aria-hidden="true"><span class="octicon octicon-link"></span></a>docker-dynamic-video</h1>
 
-<p>Dynamic Video Drivers with X-Server on Docker. (Should work with Mesa &amp; Nvidia 304.XX, 340.XX, 346.XX, and 349.XX series drivers (All?)) 
-Includes all 32 bit &amp; 64 bit libraries as well so it should work out of the box with VirtualGL, Wine, PlayonLinux etc.</p>
+<p>Dynamic Video Drivers with optional X-Server on Docker. (Should work with Mesa &amp; Nvidia 304.XX, 340.XX, 346.XX, and 349.XX series drivers (All?)) 
+Includes all 32 bit &amp; 64 bit libraries as well so it should work out of the box with
+<a href="https://github.com/yantis/docker-virtualgl">VirtualGL</a>, Wine, PlayonLinux etc.</p>
 
-<p>The default mode is to start up the X-Server and SSH daemon but if you start it up with any command it will just default to that and not start up any servers.</p>
+<p>The default mode is to start up the X-Server and SSH daemon but if you start it up with any command it will just default to that and not start up any servers.
+Though if you do not startup any servers you do need to do the first time video initalization yourself. See the local usage section below.</p>
 
 <p>On Docker hub <a href="https://registry.hub.docker.com/u/yantis/dynamic-video/">dynamic-video</a>
 on Github <a href="https://github.com/yantis/docker-dynamic-video">docker-dynamic-video</a></p>
@@ -39,8 +41,104 @@ that the host is using an Nvidia driver it will switch over to that one. It shou
 This could also easily do the same for ATI but as I don't have one of those cards I am unable to test it.
 You can fork this and add it yourself or if you send me SSH access to a server with an ATI card I can build it in as well.</p>
 
-<p>It works well with VirtualGL. I have ran Blender as well as even Path of Exile on an Amazon EC2 GPU instance via VirtualGL and PlayOnLinux.
+<p>It works well with <a href="https://github.com/yantis/docker-virtualgl">VirtualGL</a>. I have ran Blender as well as even Path of Exile on an Amazon EC2 GPU instance via 
+<a href="https://github.com/yantis/docker-virtualgl">VirtualGL</a> and PlayOnLinux.
 All in a Docker container. Checkout my Dockerfiles for these (If I didn't get around to putting them up. Just ask.)</p>
+
+<h2>
+<a id="usage-local" class="anchor" href="#usage-local" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage (Local)</h2>
+
+<p>This example launches the container and initalizes the graphcs with your drivers and in this case
+runs nvidia-smi to get video card information.</p>
+
+<div class="highlight highlight-bash"><pre>xhost +si:localuser:<span class="pl-s"><span class="pl-pds">$(</span>whoami<span class="pl-pds">)</span></span> <span class="pl-k">&gt;</span>/dev/null
+docker run \
+    --privileged \
+    --rm \
+    -ti \
+    -e DISPLAY \
+    -v /tmp/.X11-unix:/tmp/.X11-unix:ro \
+    -u docker \
+    yantis/dynamic-video /bin/bash -c <span class="pl-s"><span class="pl-pds">"</span>sudo initalize-graphics &gt;/dev/null 2&gt;/dev/null; nvidia-smi;<span class="pl-pds">"</span></span></pre></div>
+
+<h3>
+<a id="breakdown" class="anchor" href="#breakdown" aria-hidden="true"><span class="octicon octicon-link"></span></a>Breakdown</h3>
+
+<div class="highlight highlight-bash"><pre>$ xhost +si:localuser:yourusername</pre></div>
+
+<p>Allows your local user to access the xsocket. Change yourusername or use $(whoami) or $USER if your shell supports it.</p>
+
+<div class="highlight highlight-bash"><pre>docker run \
+        --privileged \
+        --rm \
+        -ti \
+        -e DISPLAY \
+        -v /tmp/.X11-unix:/tmp/.X11-unix:ro \
+        -u docker \
+        yantis/dynamic-video /bin/bash -c <span class="pl-s"><span class="pl-pds">"</span>sudo initalize-graphics &gt;/dev/null 2&gt;/dev/null; nvidia-smi;<span class="pl-pds">"</span></span></pre></div>
+
+<p>This follows these docker conventions:</p>
+
+<ul>
+<li>
+<code>-ti</code> will run an interactive session that can be terminated with CTRL+C.</li>
+<li>
+<code>--rm</code> will run a temporary session that will make sure to remove the container on exit.</li>
+<li>
+<code>-e DISPLAY</code> sets the host display to the local machines display.</li>
+<li>
+<code>-v /tmp/.X11-unix:/tmp/.X11-unix:ro</code> bind mounts the X11 socks on your local machine to the containers and makes it read only.</li>
+<li>
+<code>-u docker</code> sets the user to docker. (or you could do root as well)</li>
+<li>
+<code>yantis/dynamic-video /bin/bash -c "sudo initalize-graphics &gt;/dev/null 2&gt;/dev/null; nvidia-smi;"</code>
+you need to initalize the graphics or otherwise it won't adapt to your graphics drivers and may not work.</li>
+</ul>
+
+<h2>
+<a id="usage-remote" class="anchor" href="#usage-remote" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage (Remote)</h2>
+
+<p>This example launches the container in the background.
+Warning: Do not run this on your primary computer in remote mode as it will launch another X server that take over
+your video cards and you will have to shutdown the container to get them back.</p>
+
+<div class="highlight highlight-bash"><pre>docker run \
+        --privileged \
+        -d \
+        -v /home/user/.ssh/authorized_keys:/authorized_keys:ro \
+        -h docker \
+        -p 49154:22 \
+        yantis/dynamic-video</pre></div>
+
+<p>This follows these docker conventions:</p>
+
+<ul>
+<li>
+<code>--privileged</code> run in privileged mode 
+If you do not want to run in privliged mode you can mess around with these:</li>
+</ul>
+
+<p>AWS <code>--device=/dev/nvidia0:/dev/nvidia0</code> \<br>
+      <code>--device=/dev/nvidiactl:/dev/nvidiactl</code> \<br>
+      <code>--device=/dev/nvidia-uvm:/dev/nvidia-uvm</code> \  </p>
+
+<p>OR (Local) <code>--device=/dev/dri/card0:/dev/dri/card0</code> \</p>
+
+<ul>
+<li>
+<code>-d</code> run in daemon mode</li>
+<li>
+<code>-h docker</code> sets the hostname to docker. (not really required but it is nice to see where you are.)</li>
+<li><p><code>-v $HOME/.ssh/authorized_keys:/authorized_keys:ro</code> Optionaly share your public keys with the host.
+This is particularlly useful when you are running this on another server that already has SSH. Like an 
+Amazon EC2 instance. WARNING: If you don't use this then it will just default to the user pass of docker/docker
+(If you do specify authorized keys it will disable all password logins to keep it secure).</p></li>
+<li><p><code>-p 49158:22</code> port that you will be connecting to.</p></li>
+<li>
+<code>yantis/dynamic-video</code> the default mode is SSH server with the X-Server so no need to run any commands.</li>
+</ul>
+
+<p>Now just SSH into it and use it (See <a href="https://github.com/yantis/docker-virtualgl">docker-virtualgl</a> for how to access it and usage etc.)</p>
 
 <h1>
 <a id="tested" class="anchor" href="#tested" aria-hidden="true"><span class="octicon octicon-link"></span></a>Tested</h1>
