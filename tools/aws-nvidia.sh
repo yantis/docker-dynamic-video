@@ -32,7 +32,7 @@
 # USER DEFINABLE (NOT OPTIONAL)
 KEYNAME=yantisec2 # Private key name
 SUBNETID=subnet-d260adb7 # VPC Subnet ID
-VOLUMEID=$1 # (this is your external volume to save your files to)
+VOLUMEID=$2 # (this is your external volume to save your files to)
 
 # USER DEFINABLE (OPTIONAL)
 REGION=us-west-2
@@ -41,7 +41,7 @@ IMAGEID=ami-71be9041
 # Exit the script if any statements returns a non true (0) value.
 set -e
 
-# Exit the script on any uninitalized variables.
+# Exit the script on any uninitialized variables.
 set -u
 
 # Exit the script if the user didn't specify at least one argument.

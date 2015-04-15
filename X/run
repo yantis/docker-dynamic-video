@@ -5,7 +5,7 @@
 # Released under the MIT license
 ############################################################
 
-/usr/bin/initalize-graphics
+/usr/bin/initialize-graphics
 
 # Launch the X server
 /usr/bin/X

@@ -98,5 +98,5 @@ RUN pacman -Syyu --noconfirm && \
     #########################################################################
 
 ADD X /service/X
-ADD initalize-graphics /usr/bin/initalize-graphics
+ADD initialize-graphics /usr/bin/initialize-graphics
 CMD /init

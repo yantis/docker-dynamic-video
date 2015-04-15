@@ -4,7 +4,7 @@ Includes all 32 bit & 64 bit libraries as well so it should work out of the box 
 [VirtualGL](https://github.com/yantis/docker-virtualgl), Wine, PlayonLinux etc.
 
 The default mode is to start up the X-Server and SSH daemon but if you start it up with any command it will just default to that and not start up any servers.
-Though if you do not startup any servers you do need to do the first time video initalization yourself. See the local usage section below.
+Though if you do not startup any servers you do need to do the first time video initialization yourself. See the local usage section below.
 
 On Docker hub [dynamic-video](https://registry.hub.docker.com/u/yantis/dynamic-video/)
 on Github [docker-dynamic-video](https://github.com/yantis/docker-dynamic-video)
@@ -31,7 +31,7 @@ All in a Docker container. Checkout my Dockerfiles for these (If I didn't get ar
 
 ## Usage (Local)
 
-This example launches the container and initalizes the graphcs with your drivers and in this case
+This example launches the container and initializes the graphcs with your drivers and in this case
 runs nvidia-smi to get video card information.
 
 ```bash
@@ -43,7 +43,7 @@ docker run \
     -e DISPLAY \
     -v /tmp/.X11-unix:/tmp/.X11-unix:ro \
     -u docker \
-    yantis/dynamic-video /bin/bash -c "sudo initalize-graphics >/dev/null 2>/dev/null; nvidia-smi;"
+    yantis/dynamic-video /bin/bash -c "sudo initialize-graphics >/dev/null 2>/dev/null; nvidia-smi;"
 ```
 
 ### Breakdown
@@ -62,7 +62,7 @@ docker run \
         -e DISPLAY \
         -v /tmp/.X11-unix:/tmp/.X11-unix:ro \
         -u docker \
-        yantis/dynamic-video /bin/bash -c "sudo initalize-graphics >/dev/null 2>/dev/null; nvidia-smi;"
+        yantis/dynamic-video /bin/bash -c "sudo initialize-graphics >/dev/null 2>/dev/null; nvidia-smi;"
 ```
 
 This follows these docker conventions:
@@ -72,8 +72,8 @@ This follows these docker conventions:
 * `-e DISPLAY` sets the host display to the local machines display.
 * `-v /tmp/.X11-unix:/tmp/.X11-unix:ro` bind mounts the X11 socks on your local machine to the containers and makes it read only.
 * `-u docker` sets the user to docker. (or you could do root as well)
-* `yantis/dynamic-video /bin/bash -c "sudo initalize-graphics >/dev/null 2>/dev/null; nvidia-smi;"`
-you need to initalize the graphics or otherwise it won't adapt to your graphics drivers and may not work.
+* `yantis/dynamic-video /bin/bash -c "sudo initialize-graphics >/dev/null 2>/dev/null; nvidia-smi;"`
+you need to initialize the graphics or otherwise it won't adapt to your graphics drivers and may not work.
 
 
 ## Usage (Remote)

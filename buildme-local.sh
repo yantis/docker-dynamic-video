@@ -8,4 +8,4 @@ docker run \
   -e DISPLAY \
   -v /tmp/.X11-unix:/tmp/.X11-unix:ro \
   -u docker \
-  yantis/dynamic-video /bin/bash -c "sudo initalize-graphics >/dev/null 2>/dev/null; nvidia-smi;"
+  yantis/dynamic-video /bin/bash -c "sudo initialize-graphics >/dev/null 2>/dev/null; nvidia-smi;"

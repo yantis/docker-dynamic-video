@@ -41,7 +41,7 @@ echo "Instance ID: $ID"
 
 # Create our new volume
 VOLUMEID=$(aws ec2 create-volume \
-  --size $1 \
+  --size $2 \
   --region $REGION \
   --availability-zone $AVAILABILITY_ZONE \
   --volume-type gp2 | \
