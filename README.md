@@ -43,9 +43,9 @@ docker run \
 
 ```bash
 $ xhost +si:localuser:yourusername
-        ```
-Allows your local user to access the xsocket. Change yourusername or use $(whoami) or $USER if your shell supports it.
+```
 
+Allows your local user to access the xsocket. Change yourusername or use $(whoami) or $USER if your shell supports it.
 
 ```bash
 docker run \
@@ -57,7 +57,8 @@ docker run \
         -u docker \
         yantis/dynamic-video /bin/bash -c "sudo initalize-graphics >/dev/null 2>/dev/null; nvidia-smi;"
 ```
-    This follows these docker conventions:
+
+This follows these docker conventions:
 
 * `-ti` will run an interactive session that can be terminated with CTRL+C.
 * `--rm` will run a temporary session that will make sure to remove the container on exit.
