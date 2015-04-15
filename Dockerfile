@@ -3,11 +3,11 @@
 # Released under the MIT license
 ############################################################
 
-# FROM yantis/archlinux-tiny
-# FROM yantis/archlinux-small
-# FROM yantis/archlinux-small-ssh-hpn
-# FROM yantis/ssh-hpn-x
-# YOU ARE HERE
+# ├─yantis/archlinux-tiny
+#    ├─yantis/archlinux-small
+#       ├─yantis/archlinux-small-ssh-hpn
+#          ├─yantis/ssh-hpn-x
+#             ├─yantis/dynamic-video
 
 FROM yantis/ssh-hpn-x
 MAINTAINER Jonathan Yantis <yantis@yantis.net>
@@ -23,15 +23,27 @@ RUN pacman -Syyu --noconfirm && \
 
     # Download from the AUR and cache the Nvidiia Beta drivers here
     mkdir -p /root/nvidia/349/ && \
-    pacman --noconfirm -S binutils gcc autoconf make fakeroot yaourt && \
-    runuser -l docker -c "yaourt --noconfirm \
-            -Sw \
-            --cachedir /root/nvidia/349 \
-            nvidia-libgl-beta \
-            nvidia-utils-beta \
-            lib32-nvidia-libgl-beta \
-            lib32-nvidia-utils-beta" && \
-    pacman --noconfirm -Rs binutils gcc autoconf make fakeroot yaourt && \
+    pacman --noconfirm -S binutils gcc autoconf make fakeroot && \
+
+    # Get the beta drivers from the AUR. We can not use yaourt since the ones in the repos are older.
+    # And yaourt defaults to the repos before using the AUR.
+
+    # nvidia-utils-beta && nvidia-libgl-beta
+    wget -P /tmp https://aur.archlinux.org/packages/nv/nvidia-utils-beta/nvidia-utils-beta.tar.gz && \
+    tar -xvf /tmp/nvidia-utils-beta.tar.gz -C /tmp && \
+    chown -R docker:docker /tmp/nvidia-utils-beta && \
+    runuser -l docker -c "(cd /tmp/nvidia-utils-beta && makepkg -sc --noconfirm --pkg nvidia-utils-beta --pkg nvidia-libgl-beta)" && \
+    mv /tmp/nvidia-utils-beta/*.xz /root/nvidia/349/ && \
+
+    # lib32-nvidia-utils-beta && lib32-nvidia-libgl-beta
+    wget -P /tmp https://aur.archlinux.org/packages/li/lib32-nvidia-utils-beta/lib32-nvidia-utils-beta.tar.gz && \
+    tar -xvf /tmp/lib32-nvidia-utils-beta.tar.gz -C /tmp && \
+    chown -R docker:docker /tmp/lib32-nvidia-utils-beta && \
+    runuser -l docker -c "(cd /tmp/lib32-nvidia-utils-beta && makepkg -sc --noconfirm --pkg lib32-nvidia-utils-beta --pkg lib32-nvidia-libgl-beta)" && \
+    mv /tmp/lib32-nvidia-utils-beta/*.xz /root/nvidia/349/ && \
+
+    # Remove build dependencies.
+    pacman --noconfirm -Rs binutils gcc autoconf make fakeroot && \
 
     # Download and cache the Nvidia 304 drivers for run time.
     mkdir -p /root/nvidia/304/ && \
@@ -63,9 +75,13 @@ RUN pacman -Syyu --noconfirm && \
            lib32-nvidia-utils \
            lib32-nvidia-libgl && \
 
-    ##########################################################################
+    #########################################################################
     # CLEAN UP SECTION - THIS GOES AT THE END                                #
     ##########################################################################
+
+    # Clean up all the nvidia downloads and installs directories
+    rm -r /tmp/* && \
+
     localepurge && \
 
     # Remove man and docs
