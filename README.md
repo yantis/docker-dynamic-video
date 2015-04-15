@@ -83,19 +83,19 @@ docker run \
         -h docker \
         -p 49154:22 \
         yantis/dynamic-video
-        ```
+```
 
-        This follows these docker conventions:
+This follows these docker conventions:
 
-        * `--privileged` run in privileged mode 
-        If you do not want to run in privliged mode you can mess around with these:
+* `--privileged` run in privileged mode 
+If you do not want to run in privliged mode you can mess around with these:
 
-        AWS
-        * --device=/dev/nvidia0:/dev/nvidia0 \
-                    * --device=/dev/nvidiactl:/dev/nvidiactl \
-                    * --device=/dev/nvidia-uvm:/dev/nvidia-uvm \
+AWS
+* --device=/dev/nvidia0:/dev/nvidia0 \
+            * --device=/dev/nvidiactl:/dev/nvidiactl \
+            * --device=/dev/nvidia-uvm:/dev/nvidia-uvm \
 
-                    OR (Local)
+OR (Local)
 * --device=/dev/dri/card0:/dev/dri/card0 \
 
 * `-d` run in daemon mode
