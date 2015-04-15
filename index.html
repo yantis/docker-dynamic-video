@@ -27,7 +27,7 @@ Includes all 32 bit &amp; 64 bit libraries as well so it should work out of the 
 <a href="https://github.com/yantis/docker-virtualgl">VirtualGL</a>, Wine, PlayonLinux etc.</p>
 
 <p>The default mode is to start up the X-Server and SSH daemon but if you start it up with any command it will just default to that and not start up any servers.
-Though if you do not startup any servers you do need to do the first time video initalization yourself. See the local usage section below.</p>
+Though if you do not startup any servers you do need to do the first time video initialization yourself. See the local usage section below.</p>
 
 <p>On Docker hub <a href="https://registry.hub.docker.com/u/yantis/dynamic-video/">dynamic-video</a>
 on Github <a href="https://github.com/yantis/docker-dynamic-video">docker-dynamic-video</a></p>
@@ -49,6 +49,14 @@ on Github <a href="https://github.com/yantis/docker-dynamic-video">docker-dynami
 
 <blockquote>
 <p><a href="https://github.com/yantis/docker-dynamic-video">yantis/dynamic-video</a></p>
+
+<blockquote>
+<p><a href="https://github.com/yantis/docker-virtualgl">yantis/virtualgl</a></p>
+
+<blockquote>
+<p><a href="https://github.com/yantis/docker-wine">yantis/wine</a></p>
+</blockquote>
+</blockquote>
 </blockquote>
 </blockquote>
 </blockquote>
@@ -71,7 +79,7 @@ All in a Docker container. Checkout my Dockerfiles for these (If I didn't get ar
 <h2>
 <a id="usage-local" class="anchor" href="#usage-local" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage (Local)</h2>
 
-<p>This example launches the container and initalizes the graphcs with your drivers and in this case
+<p>This example launches the container and initializes the graphcs with your drivers and in this case
 runs nvidia-smi to get video card information.</p>
 
 <div class="highlight highlight-bash"><pre>xhost +si:localuser:<span class="pl-s"><span class="pl-pds">$(</span>whoami<span class="pl-pds">)</span></span> <span class="pl-k">&gt;</span>/dev/null
@@ -82,7 +90,7 @@ docker run \
     -e DISPLAY \
     -v /tmp/.X11-unix:/tmp/.X11-unix:ro \
     -u docker \
-    yantis/dynamic-video /bin/bash -c <span class="pl-s"><span class="pl-pds">"</span>sudo initalize-graphics &gt;/dev/null 2&gt;/dev/null; nvidia-smi;<span class="pl-pds">"</span></span></pre></div>
+    yantis/dynamic-video /bin/bash -c <span class="pl-s"><span class="pl-pds">"</span>sudo initialize-graphics &gt;/dev/null 2&gt;/dev/null; nvidia-smi;<span class="pl-pds">"</span></span></pre></div>
 
 <h3>
 <a id="breakdown" class="anchor" href="#breakdown" aria-hidden="true"><span class="octicon octicon-link"></span></a>Breakdown</h3>
@@ -98,7 +106,7 @@ docker run \
         -e DISPLAY \
         -v /tmp/.X11-unix:/tmp/.X11-unix:ro \
         -u docker \
-        yantis/dynamic-video /bin/bash -c <span class="pl-s"><span class="pl-pds">"</span>sudo initalize-graphics &gt;/dev/null 2&gt;/dev/null; nvidia-smi;<span class="pl-pds">"</span></span></pre></div>
+        yantis/dynamic-video /bin/bash -c <span class="pl-s"><span class="pl-pds">"</span>sudo initialize-graphics &gt;/dev/null 2&gt;/dev/null; nvidia-smi;<span class="pl-pds">"</span></span></pre></div>
 
 <p>This follows these docker conventions:</p>
 
@@ -114,8 +122,8 @@ docker run \
 <li>
 <code>-u docker</code> sets the user to docker. (or you could do root as well)</li>
 <li>
-<code>yantis/dynamic-video /bin/bash -c "sudo initalize-graphics &gt;/dev/null 2&gt;/dev/null; nvidia-smi;"</code>
-you need to initalize the graphics or otherwise it won't adapt to your graphics drivers and may not work.</li>
+<code>yantis/dynamic-video /bin/bash -c "sudo initialize-graphics &gt;/dev/null 2&gt;/dev/null; nvidia-smi;"</code>
+you need to initialize the graphics or otherwise it won't adapt to your graphics drivers and may not work.</li>
 </ul>
 
 <h2>
