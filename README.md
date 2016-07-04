@@ -1,5 +1,5 @@
 # docker-dynamic-video
-Dynamic Video Drivers with optional X-Server on Docker. (Should work with Mesa & Nvidia 304.XX, 340.XX, 346.XX, and 349.XX series drivers (All?)) 
+Dynamic Video Drivers with optional X-Server on Docker. (Should work with Mesa & Nvidia 304.XX, 340.XX, and 367.XX series drivers) 
 Includes all 32 bit & 64 bit libraries as well so it should work out of the box with
 [VirtualGL](https://github.com/yantis/docker-virtualgl), Wine, PlayonLinux etc.
 

@@ -49,10 +49,10 @@ then
     pacman -U --noconfirm *.xz
   fi
 
-  # Is it version 349 (BETA) ?
-  if [[ $NVIDIA == *" 349."* ]]
+  # Is it version 367 (BETA) ?
+  if [[ $NVIDIA == *" 367."* ]]
   then
-    cd /root/nvidia/349/
+    cd /root/nvidia/367/
     pacman --noconfirm -Rdd mesa-libgl lib32-mesa-libgl
     pacman -U --noconfirm *.xz
   fi

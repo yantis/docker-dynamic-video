@@ -12,7 +12,7 @@
 FROM yantis/ssh-hpn-x
 MAINTAINER Jonathan Yantis <yantis@yantis.net>
 
-# Don't updated
+# Don't update
 RUN pacman -Syy --noconfirm && \
 
     # Install common packages.
@@ -21,29 +21,31 @@ RUN pacman -Syy --noconfirm && \
     # Install the X-server and default to mesa both 32 and 64 bit
     pacman --noconfirm -S xorg-server mesa-libgl lib32-mesa-libgl && \
 
-    # Download from the AUR and cache the Nvidiia Beta drivers here
-    mkdir -p /root/nvidia/349/ && \
-    pacman --noconfirm -S binutils gcc autoconf make fakeroot && \
+    # # Download from the AUR and cache the Nvidiia Beta drivers here
+    # Nvidia beta drivers and Nvidia drivers are the same at this time
 
-    # Get the beta drivers from the AUR. We can not use yaourt since the ones in the repos are older.
-    # And yaourt defaults to the repos before using the AUR.
+    # mkdir -p /root/nvidia/367/ && \
+    # pacman --noconfirm -S binutils gcc autoconf make fakeroot && \
 
-    # nvidia-utils-beta && nvidia-libgl-beta
-    wget -P /tmp https://aur.archlinux.org/packages/nv/nvidia-utils-beta/nvidia-utils-beta.tar.gz && \
-    tar -xvf /tmp/nvidia-utils-beta.tar.gz -C /tmp && \
-    chown -R docker:docker /tmp/nvidia-utils-beta && \
-    runuser -l docker -c "(cd /tmp/nvidia-utils-beta && makepkg -sc --noconfirm --pkg nvidia-utils-beta --pkg nvidia-libgl-beta)" && \
-    mv /tmp/nvidia-utils-beta/*.xz /root/nvidia/349/ && \
+    # # Get the beta drivers from the AUR. We can not use yaourt since the ones in the repos are older.
+    # # And yaourt defaults to the repos before using the AUR.
 
-    # lib32-nvidia-utils-beta && lib32-nvidia-libgl-beta
-    wget -P /tmp https://aur.archlinux.org/packages/li/lib32-nvidia-utils-beta/lib32-nvidia-utils-beta.tar.gz && \
-    tar -xvf /tmp/lib32-nvidia-utils-beta.tar.gz -C /tmp && \
-    chown -R docker:docker /tmp/lib32-nvidia-utils-beta && \
-    runuser -l docker -c "(cd /tmp/lib32-nvidia-utils-beta && makepkg -sc --noconfirm --pkg lib32-nvidia-utils-beta --pkg lib32-nvidia-libgl-beta)" && \
-    mv /tmp/lib32-nvidia-utils-beta/*.xz /root/nvidia/349/ && \
+    # # nvidia-utils-beta && nvidia-libgl-beta
+    # wget -P /tmp https://aur.archlinux.org/cgit/aur.git/snapshot/nvidia-utils-beta.tar.gz && \
+    # tar -xvf /tmp/nvidia-utils-beta.tar.gz -C /tmp && \
+    # chown -R docker:docker /tmp/nvidia-utils-beta && \
+    # runuser -l docker -c "(cd /tmp/nvidia-utils-beta && makepkg -sc --noconfirm --pkg nvidia-utils-beta --pkg nvidia-libgl-beta)" && \
+    # mv /tmp/nvidia-utils-beta/*.xz /root/nvidia/367/ && \
 
-    # Remove build dependencies.
-    pacman --noconfirm -Rs binutils gcc autoconf make fakeroot && \
+    # # lib32-nvidia-utils-beta && lib32-nvidia-libgl-beta
+    # wget -P /tmp https://aur.archlinux.org/cgit/aur.git/snapshot/lib32-nvidia-utils-beta.tar.gz && \
+    # tar -xvf /tmp/lib32-nvidia-utils-beta.tar.gz -C /tmp && \
+    # chown -R docker:docker /tmp/lib32-nvidia-utils-beta && \
+    # runuser -l docker -c "(cd /tmp/lib32-nvidia-utils-beta && makepkg -sc --noconfirm --pkg lib32-nvidia-utils-beta --pkg lib32-nvidia-libgl-beta)" && \
+    # mv /tmp/lib32-nvidia-utils-beta/*.xz /root/nvidia/367/ && \
+
+    # # Remove build dependencies.
+    # pacman --noconfirm -Rs binutils gcc autoconf make fakeroot && \
 
     # Download and cache the Nvidia 304 drivers for run time.
     mkdir -p /root/nvidia/304/ && \
@@ -65,11 +67,11 @@ RUN pacman -Syy --noconfirm && \
             lib32-nvidia-340xx-libgl \
             lib32-nvidia-340xx-utils && \
 
-    # Download and cache the Nvidia 346 drivers for run time.
-    mkdir -p /root/nvidia/346/ && \
+    # Download and cache the Nvidia 367 drivers for run time.
+    mkdir -p /root/nvidia/367/ && \
     pacman --noconfirm \
            -Sw \
-           --cachedir /root/nvidia/346 \
+           --cachedir /root/nvidia/367 \
            nvidia-libgl \
            nvidia-utils \
            lib32-nvidia-utils \
@@ -80,7 +82,7 @@ RUN pacman -Syy --noconfirm && \
     ##########################################################################
 
     # Clean up all the nvidia downloads and installs directories
-    rm -r /tmp/* && \
+    # rm -r /tmp/* && \
 
     localepurge && \
 
