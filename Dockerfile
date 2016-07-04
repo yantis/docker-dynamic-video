@@ -12,8 +12,8 @@
 FROM yantis/ssh-hpn-x
 MAINTAINER Jonathan Yantis <yantis@yantis.net>
 
-# Update and force a refresh of all package lists even if they appear up to date.
-RUN pacman -Syyu --noconfirm && \
+# Don't updated
+RUN pacman -Syy --noconfirm && \
 
     # Install common packages.
     pacman --noconfirm -S lib32-glibc lib32-zlib lib32-gcc-libs libxdamage libxxf86vm && \
